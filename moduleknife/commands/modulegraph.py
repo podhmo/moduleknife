@@ -3,42 +3,57 @@ from moduleknife.calling import call_file_as_main_module, call_command_as_main_m
 from moduleknife.graph import Digraph
 from moduleknife.naming import modulename_of, is_modulename
 from magicalimport import import_symbol
+import argparse
 import sys
 import os.path
 import shutil
 
-dag = Digraph()
 
+class Driver:
+    def __init__(self, filename):
+        self.dag = Digraph()
+        self.filename = filename
 
-def add(src, dst):
-    if is_modulename(modulename_of(dst)):
-        dag.add(modulename_of(src), modulename_of(dst))
+    def add(self, src, dst):
+        if is_modulename(modulename_of(dst)):
+            self.dag.add(modulename_of(src), modulename_of(dst))
 
+    def finish(self, signum, tb):
+        if self.filename is None:
+            sys.stdout.write(str(self.dag.to_dot()))
+        else:
+            with open(self.filename, "w") as wf:
+                wf.write(str(self.dag.to_dot()))
+            print("write {}...".format(self.filename), file=sys.stderr)
 
-def on_stop(signum, tb):
-    filename = "/tmp/graph.dot"
-    with open(filename, "w") as wf:
-        wf.write(str(dag.to_dot()))
-    print("write {}...".format(filename), file=sys.stderr)
+    def run(self, file, extras):
+        sys.argv = [sys.argv[0]]
+        sys.argv.extend(extras)
 
+        if ":" in file:
+            return import_symbol(file)()
+        elif os.path.exists(file):
+            return call_file_as_main_module(file)
 
-def run(file):
-    sys.argv.pop(1)
-
-    if ":" in file:
-        return import_symbol(file)()
-    elif os.path.exists(file):
-        return call_file_as_main_module(file)
-
-    cmd_path = shutil.which(file)
-    if cmd_path:
-        return call_command_as_main_module(file, cmd_path)
+        cmd_path = shutil.which(file)
+        if cmd_path:
+            return call_command_as_main_module(file, cmd_path)
 
 
 def main():
-    if len(sys.argv) <= 1:
-        print("modulegraph <filename>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("file")
+    parser.add_argument("--outfile", default=None)
+    parser.add_argument(
+        "--driver",
+        default="moduleknife.commands.modulegraph:Driver",
+        help="default: moduleknife.commands.modulegraph:Driver",
+    )
 
-    with capture_with_signal_handle(add, teardown=on_stop):
-        run(sys.argv[1])
+    args, extras = parser.parse_known_args()
+
+    driver_cls = import_symbol(args.driver, ns="moduleknife.commands.modulegraph")
+    driver = driver_cls(args.outfile)
+
+    with capture_with_signal_handle(driver.add, teardown=driver.finish):
+        driver.run(args.file, extras)
