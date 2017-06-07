@@ -57,3 +57,6 @@ moduleknife
   else:
       print("hmm")
 
+
+`02dump_json.svg <./misc/readme.svg>`_
+`02dump_json2.svg <./misc/readme2.svg>`_

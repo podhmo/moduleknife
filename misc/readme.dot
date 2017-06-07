@@ -1,0 +1,23 @@
+digraph g {
+    g0 [label="json"]
+    g1 [label="json.decoder"]
+    g2 [label="json.encoder"]
+    g3 [label="json.scanner"]
+    g4 [label="gettext"]
+    g5 [label="locale"]
+    g6 [label="struct"]
+    g7 [label="examples.02dump_json"]
+    g8 [label="argparse"]
+    g9 [label="copy"]
+    g10 [label="textwrap"]
+    g0 -> g1
+    g0 -> g2
+    g1 -> g3
+    g4 -> g5
+    g4 -> g6
+    g7 -> g0
+    g7 -> g8
+    g8 -> g4
+    g8 -> g9
+    g8 -> g10
+}
