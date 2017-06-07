@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import fastentrypoints
 import sys
 
 from setuptools import setup, find_packages
