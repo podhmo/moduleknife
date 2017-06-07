@@ -55,3 +55,8 @@ class Digraph:
                 for dst in dsts:
                     m.stmt("{} -> {}", self.gensym_map[src], self.gensym_map[dst])
         return str(m)
+
+
+class DigraphToplevelOnly(Digraph):
+    def add(self, src, dst):
+        return self._add(src.split(".", 1)[0], dst.split(".", 1)[0])

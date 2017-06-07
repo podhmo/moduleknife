@@ -1,6 +1,6 @@
 from moduleknife.capture import capture_with_signal_handle
 from moduleknife.calling import call_file_as_main_module, call_command_as_main_module
-from moduleknife.graph import Digraph
+from moduleknife.graph import Digraph, DigraphToplevelOnly
 from moduleknife.naming import modulename_of, is_modulename
 from magicalimport import import_symbol
 import argparse
@@ -10,8 +10,10 @@ import shutil
 
 
 class Driver:
+    factory = Digraph
+
     def __init__(self, filename):
-        self.dag = Digraph()
+        self.dag = self.factory()
         self.filename = filename
 
     def add(self, src, dst):
@@ -38,6 +40,10 @@ class Driver:
         cmd_path = shutil.which(file)
         if cmd_path:
             return call_command_as_main_module(file, cmd_path)
+
+
+class ToplevelOnlyDriver(Driver):
+    factory = DigraphToplevelOnly
 
 
 def main():
