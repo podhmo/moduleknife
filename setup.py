@@ -48,5 +48,7 @@ setup(
     tests_require=tests_require,
     test_suite="moduleknife.tests",
     entry_points="""
+    [console_scripts]
+    modulegraph = moduleknife.commands.modulegraph:main
 """
 )

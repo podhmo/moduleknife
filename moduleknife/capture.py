@@ -99,16 +99,22 @@ SIGNALS = [signal.SIGINT, signal.SIGTERM, signal.SIGQUIT, signal.SIGHUP]
 @contextlib.contextmanager
 def capture_with_signal_handle(fn, teardown=None, preserved=None, signals=SIGNALS, status=0):
     preserved = preserved or DEFAULT_MODULES
+
     called = False
+    exc = None
 
     def on_stop(signum, tb):
+        nonlocal exc
         nonlocal called
+
         if not called:
             called = True
             if teardown is not None:
                 teardown(signum, tb)
             else:
                 print("trapped:", signum, file=sys.stderr)
+        if exc is not None:
+            raise exc from exc
         sys.exit(status)
 
     for s in signals:
@@ -117,5 +123,7 @@ def capture_with_signal_handle(fn, teardown=None, preserved=None, signals=SIGNAL
     try:
         with capture(fn, preserved=preserved) as factory:
             yield factory
+    except Exception as e:
+        exc = e
     finally:
         on_stop(None, None)

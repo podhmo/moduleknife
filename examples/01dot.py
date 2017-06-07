@@ -15,6 +15,7 @@ def on_stop(signum, tb):
     print(dag.to_dot())
     sys.stdout.flush()
 
+
 with capture_with_signal_handle(add, teardown=on_stop):
     from wsgiref.simple_server import make_server
     from pyramid.config import Configurator
