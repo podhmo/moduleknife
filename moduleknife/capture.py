@@ -1,5 +1,6 @@
 import sys
 DEFAULT_MODULES = set(sys.modules.keys())  # NOQA
+import signal
 import inspect
 import contextlib
 
@@ -90,3 +91,24 @@ def capture(fn, preserved=None):
             if loaders is not None:
                 sys.path_importer_cache[name]._loaders = loaders
         # todo: recover for new imoported modules
+
+
+SIGNALS = [signal.SIGINT, signal.SIGTERM, signal.SIGQUIT, signal.SIGHUP]
+
+
+@contextlib.contextmanager
+def capture_with_signal_handle(fn, teardown=None, preserved=None, signals=SIGNALS, status=0):
+    preserved = preserved or DEFAULT_MODULES
+
+    def on_stop(signum, tb):
+        if teardown is not None:
+            teardown(signum, tb)
+        else:
+            print("trapped:", signum, file=sys.stderr)
+        sys.exit(status)
+
+    for s in signals:
+        signal.signal(s, on_stop)
+
+    with capture(fn, preserved=preserved) as factory:
+        yield factory
