@@ -1,3 +1,4 @@
+import sys
 from moduleknife.capture import capture_with_signal_handle
 from moduleknife.graph import Digraph
 from moduleknife.naming import modulename_of, is_modulename
@@ -11,10 +12,8 @@ def add(src, dst):
 
 
 def on_stop(signum, tb):
-    print("write to /tmp/hello.dot")
-    with open("/tmp/hello.dot", "w") as wf:
-        wf.write(str(dag.to_dot()))
-
+    print(dag.to_dot())
+    sys.stdout.flush()
 
 with capture_with_signal_handle(add, teardown=on_stop):
     from wsgiref.simple_server import make_server
