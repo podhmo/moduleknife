@@ -107,14 +107,15 @@ def capture_with_signal_handle(fn, teardown=None, preserved=None, signals=SIGNAL
         nonlocal exc
         nonlocal called
 
+        if exc is not None:
+            raise exc
+
         if not called:
             called = True
             if teardown is not None:
                 teardown(signum, tb)
             else:
                 print("trapped:", signum, file=sys.stderr)
-        if exc is not None:
-            raise exc from exc
         sys.exit(status)
 
     for s in signals:
