@@ -1,17 +1,17 @@
 digraph g {
     g0 [label="argparse"]
-    g1 [label="textwrap"]
+    g1 [label="copy"]
     g2 [label="gettext"]
-    g3 [label="copy"]
-    g4 [label="examples"]
-    g5 [label="json"]
-    g6 [label="locale"]
-    g7 [label="struct"]
+    g3 [label="textwrap"]
+    g4 [label="struct"]
+    g5 [label="locale"]
+    g6 [label="examples"]
+    g7 [label="json"]
     g0 -> g1
     g0 -> g2
     g0 -> g3
-    g4 -> g0
-    g4 -> g5
-    g2 -> g6
-    g2 -> g7
+    g2 -> g4
+    g2 -> g5
+    g6 -> g0
+    g6 -> g7
 }

@@ -31,6 +31,18 @@ moduleknife
       g5 -> g9
       g5 -> g10
   }
+  $ moduelgraph 02dump_json.py --outfile=02dump_json.dot
+  {
+    "age": 20,
+    "name": "foo"
+  }
+  write 02dump_json.dot...
+  $ moduelgraph 02dump_json.py --driver=ToplevelOnlyDriver --outfile=02dump_json2.dot
+  {
+    "age": 20,
+    "name": "foo"
+  }
+  write 02dump_json2.dot...
 
 
 02dump_json.py
