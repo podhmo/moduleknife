@@ -28,18 +28,18 @@ class Driver:
                 wf.write(str(self.dag.to_dot()))
             print("write {}...".format(self.filename), file=sys.stderr)
 
-    def run(self, file, extras):
+    def run(self, fname, extras):
         sys.argv = [sys.argv[0]]
         sys.argv.extend(extras)
 
-        if ":" in file:
-            return import_symbol(file)()
-        elif os.path.exists(file):
-            return call_file_as_main_module(file)
+        if ":" in fname:
+            return import_symbol(fname)()
+        elif os.path.exists(fname) and not os.path.isdir(fname):
+            return call_file_as_main_module(fname)
 
-        cmd_path = shutil.which(file)
+        cmd_path = shutil.which(fname)
         if cmd_path:
-            return call_command_as_main_module(file, cmd_path)
+            return call_command_as_main_module(fname, cmd_path)
 
 
 class ToplevelOnlyDriver(Driver):
