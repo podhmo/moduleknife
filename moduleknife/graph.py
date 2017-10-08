@@ -33,16 +33,19 @@ class Digraph:
     def __init__(self):
         self.nodes = defaultdict(set)
         self.gensym_map = GensymMap("g")
+        self.metadata = {}
 
-    def _add(self, src, dst):
+    def __getitem__(self, k):
+        return self.gensym_map[k]
+
+    def add(self, src, dst, metadata=None):
         if src == dst:
             return
         self.nodes[src].add(dst)
+        if self.metadata is not None:
+            self.metadata[dst] = metadata
 
-    def add(self, src, dst):
-        return self._add(src, dst)
-
-    def to_dot(self):
+    def to_dot(self, handle=None):
         m = DotModule()
         with m.block("digraph g "):
             for src, dsts in self.nodes.items():
@@ -53,7 +56,10 @@ class Digraph:
                         m.stmt('{} [label="{}"]'.format(self.gensym_map[dst], dst))
             for src, dsts in self.nodes.items():
                 for dst in dsts:
-                    m.stmt("{} -> {}", self.gensym_map[src], self.gensym_map[dst])
+                    if handle:
+                        handle(m, self, src, dst)
+                    else:
+                        m.stmt('{} -> {}', self.gensym_map[src], self.gensym_map[dst])
         return str(m)
 
 

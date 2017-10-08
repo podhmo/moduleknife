@@ -34,8 +34,10 @@ class CapturedLoaderFactory:
                 frame = _get_caller(lv=2)
                 where = frame.f_code.co_filename
                 filename = module.__file__
-                fn(where, filename)
-                return super().exec_module(module)
+                fn(where, filename, stage="before")
+                m = super().exec_module(module)
+                fn(where, filename, stage="after")
+                return m
 
         self.cls_map[cls] = ExtLoader
         return ExtLoader
