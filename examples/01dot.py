@@ -6,9 +6,10 @@ from moduleknife.naming import modulename_of, is_modulename
 dag = Digraph()
 
 
-def add(src, dst):
-    if is_modulename(modulename_of(dst)):
-        dag.add(modulename_of(src), modulename_of(dst))
+def add(src, dst, *, stage):
+    if stage == "before":
+        if is_modulename(modulename_of(dst)):
+            dag.add(modulename_of(src), modulename_of(dst))
 
 
 def on_stop(signum, tb):

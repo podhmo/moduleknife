@@ -1,17 +1,15 @@
-from moduleknife.capture import capture_with_signal_handle
-from moduleknife.calling import call_file_as_main_module, call_command_as_main_module
-from moduleknife.graph import Digraph, DigraphToplevelOnly
-from moduleknife.naming import modulename_of, is_modulename
-from magicalimport import import_symbol
 import argparse
 import sys
 import time
-import os.path
-import shutil
+from moduleknife.capture import capture_with_signal_handle
+from magicalimport import import_symbol
+from moduleknife import calling
+from moduleknife import graph
+from moduleknife import modulename_of, is_modulename
 
 
 class Driver:
-    factory = Digraph
+    factory = graph.Digraph
 
     def __init__(self, filename, metadata_handler):
         self.dag = self.factory()
@@ -34,21 +32,11 @@ class Driver:
             print("write {}...".format(self.filename), file=sys.stderr)
 
     def run(self, fname, extras):
-        sys.argv = [sys.argv[0]]
-        sys.argv.extend(extras)
-
-        if ":" in fname:
-            return import_symbol(fname)()
-        elif os.path.exists(fname) and not os.path.isdir(fname):
-            return call_file_as_main_module(fname)
-
-        cmd_path = shutil.which(fname)
-        if cmd_path:
-            return call_command_as_main_module(fname, cmd_path)
+        return calling.call_file(fname, extras)
 
 
 class ToplevelOnlyDriver(Driver):
-    factory = DigraphToplevelOnly
+    factory = graph.DigraphToplevelOnly
 
 
 def convert_size(size_bytes):
