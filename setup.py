@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 import os
 import fastentrypoints
 import sys
@@ -50,6 +48,7 @@ setup(
     test_suite="moduleknife.tests",
     entry_points="""
     [console_scripts]
+    moduleknife = moduleknife.commands.moduleknife:main
     modulegraph = moduleknife.commands.modulegraph:main
 """
 )

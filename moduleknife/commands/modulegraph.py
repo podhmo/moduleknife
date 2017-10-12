@@ -5,7 +5,7 @@ from moduleknife.capture import capture_with_signal_handle
 from magicalimport import import_symbol
 from moduleknife import calling
 from moduleknife import graph
-from moduleknife import modulename_of, is_modulename
+from moduleknife.naming import modulename_of, is_modulename
 
 
 class Driver:

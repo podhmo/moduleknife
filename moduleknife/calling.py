@@ -20,9 +20,8 @@ def call_command_as_main_module(cmd, filepath):
 
 
 def call_file(fname, extras):
-    sys.argv = [sys.argv[0]]
+    sys.argv = [fname]
     sys.argv.extend(extras)
-
     if ":" in fname:
         return import_symbol(fname)()
     elif os.path.exists(fname) and not os.path.isdir(fname):
