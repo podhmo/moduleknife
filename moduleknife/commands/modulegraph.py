@@ -1,11 +1,13 @@
 import argparse
 import sys
 import time
+import logging
 from moduleknife.capture import capture_with_signal_handle
 from magicalimport import import_symbol
 from moduleknife import calling
 from moduleknife import graph
 from moduleknife.naming import modulename_of, is_modulename
+logger = logging.getLogger(__name__)
 
 
 class Driver:
@@ -41,7 +43,9 @@ class ToplevelOnlyDriver(Driver):
 
 def convert_size(size_bytes):
     import math
-    if size_bytes == 0:
+    if size_bytes <= 0:
+        if size_bytes < 0:
+            logger.warning("invalid domain %f", size_bytes, stack_info=True)
         return "0B"
     size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
     i = int(math.floor(math.log(size_bytes, 1024)))
