@@ -8,11 +8,11 @@ from importlib.machinery import SourceFileLoader
 
 
 def call_file_as_main_module(filepath):
-    spec = spec_from_file_location("__main__", filepath)
+    spec = spec_from_file_location("__main__", os.path.abspath(filepath))
     module = module_from_spec(spec)
-    code = spec.loader.get_code(module.__name__)
+    sys.modules["__main__"].__file__ = module.__file__  # hack
     # todo: call_with_frames_removed
-    exec(code, module.__dict__)
+    spec.loader.exec_module(module)
 
 
 def call_command_as_main_module(cmd, filepath):
