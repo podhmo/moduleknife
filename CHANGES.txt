@@ -1,1 +1,4 @@
+0.2.0
 
+- modulegraph, add --browse option
+- modulegraph, fix bug that modulegraph's __file__ is used when calling as main
