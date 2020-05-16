@@ -1,5 +1,6 @@
 import logging
 import threading
+
 logger = logging.getLogger(__name__)
 
 
@@ -42,6 +43,7 @@ def tick(fn, *, interval, iterations=-1, failfast=False):
 
 def setup(level=logging.DEBUG):
     import sys
+
     handler = logging.StreamHandler(sys.stderr)
     formatter = logging.Formatter("%(asctime)s\t%(levelname)s\t%(name)s\t%(message)s")
     handler.setFormatter(formatter)

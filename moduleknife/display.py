@@ -6,6 +6,7 @@ import signal
 class ProcessInfoDisplay:
     def __init__(self, output):
         import psutil
+
         self.output = output
         self.p = psutil.Process()
 
@@ -27,6 +28,7 @@ class ProcessInfoDisplay:
 class TracebackDisplay:
     def __init__(self, output, level=3):
         import traceback
+
         self.output = output
         self.skip_level = level
         self.traceback = traceback
@@ -52,6 +54,7 @@ class RemoteDisplay:
 class DefaultDisplay:
     def __init__(self, output, level=4):
         import json
+
         self.output = output
         self.process = ProcessInfoDisplay(output)
         self.stacktrace = TracebackDisplay(output, level=level)
@@ -60,9 +63,7 @@ class DefaultDisplay:
     def __call__(self):
         info = self.process.collect_process_info()
         stack = self.stacktrace.collect_stack()
-        d = {
-            "stack": stack
-        }
+        d = {"stack": stack}
         d.update(info)
         self.json.dump(d, self.output, indent=2, ensure_ascii=False, sort_keys=True)
 

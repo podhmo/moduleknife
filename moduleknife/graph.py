@@ -59,7 +59,7 @@ class Digraph:
                     if handle:
                         handle(m, self, src, dst)
                     else:
-                        m.stmt('{} -> {}', self.gensym_map[src], self.gensym_map[dst])
+                        m.stmt("{} -> {}", self.gensym_map[src], self.gensym_map[dst])
         return str(m)
 
 

@@ -3,14 +3,15 @@ import fastentrypoints
 import sys
 
 from setuptools import setup, find_packages
+
 here = os.path.abspath(os.path.dirname(__file__))
 try:
-    with open(os.path.join(here, 'README.rst')) as f:
+    with open(os.path.join(here, "README.rst")) as f:
         README = f.read()
-    with open(os.path.join(here, 'CHANGES.txt')) as f:
+    with open(os.path.join(here, "CHANGES.txt")) as f:
         CHANGES = f.read()
 except IOError:
-    README = CHANGES = ''
+    README = CHANGES = ""
 
 install_requires = [
     "prestring",
@@ -24,15 +25,15 @@ tests_require = []
 testing_extras = tests_require + []
 
 setup(
-    name='moduleknife',
-    version='0.1.1',
-    description='-',
-    long_description=README + '\n\n' + CHANGES,
+    name="moduleknife",
+    version="0.1.1",
+    description="-",
+    long_description=README + "\n\n" + CHANGES,
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
-    keywords='',
+    keywords="",
     author="",
     author_email="",
     url="",
@@ -40,15 +41,12 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
-    extras_require={
-        'testing': testing_extras,
-        'docs': docs_extras,
-    },
+    extras_require={"testing": testing_extras, "docs": docs_extras,},
     tests_require=tests_require,
     test_suite="moduleknife.tests",
     entry_points="""
     [console_scripts]
     moduleknife = moduleknife.commands.moduleknife:main
     modulegraph = moduleknife.commands.modulegraph:main
-"""
+""",
 )

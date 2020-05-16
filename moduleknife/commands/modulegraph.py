@@ -7,6 +7,7 @@ from magicalimport import import_symbol
 from moduleknife import calling
 from moduleknife import graph
 from moduleknife.naming import modulename_of, is_modulename
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,6 +44,7 @@ class ToplevelOnlyDriver(Driver):
 
 def convert_size(size_bytes):
     import math
+
     if size_bytes <= 0:
         if size_bytes < 0:
             logger.warning("invalid domain %f", size_bytes, stack_info=True)
@@ -68,7 +70,12 @@ class timeHandler:
             return r
 
     def emit(self, m, graph, src, dst):
-        m.stmt('{} -> {} [label="{}s"]', graph[src], graph[dst], round(graph.metadata[dst], 5))
+        m.stmt(
+            '{} -> {} [label="{}s"]',
+            graph[src],
+            graph[dst],
+            round(graph.metadata[dst], 5),
+        )
 
     def finish(self, wf):
         top_n_items = sorted([(v, k) for k, v in self.results.items()], reverse=True)
@@ -80,6 +87,7 @@ class timeHandler:
 class memoryHandler:
     def __init__(self):
         import psutil
+
         self.p = psutil.Process()
         self.before_map = {}
         self.results = {}
@@ -93,7 +101,12 @@ class memoryHandler:
             return r
 
     def emit(self, m, graph, src, dst):
-        m.stmt('{} -> {} [label="{}"]', graph[src], graph[dst], convert_size(graph.metadata[dst]))
+        m.stmt(
+            '{} -> {} [label="{}"]',
+            graph[src],
+            graph[dst],
+            convert_size(graph.metadata[dst]),
+        )
 
     def finish(self, wf):
         top_n_items = sorted([(v, k) for k, v in self.results.items()], reverse=True)

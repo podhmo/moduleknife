@@ -1,4 +1,5 @@
 import sys
+
 DEFAULT_MODULES = set(sys.modules.keys())  # NOQA
 import signal
 import inspect
@@ -99,7 +100,9 @@ SIGNALS = [signal.SIGINT, signal.SIGTERM, signal.SIGQUIT, signal.SIGHUP]
 
 
 @contextlib.contextmanager
-def capture_with_signal_handle(fn, teardown=None, preserved=None, signals=SIGNALS, status=0):
+def capture_with_signal_handle(
+    fn, teardown=None, preserved=None, signals=SIGNALS, status=0
+):
     preserved = preserved or DEFAULT_MODULES
 
     called = False
