@@ -26,7 +26,7 @@ testing_extras = tests_require + []
 
 setup(
     name="moduleknife",
-    version="0.2.0",
+    version="0.2.1",
     description="-",
     long_description=README + "\n\n" + CHANGES,
     classifiers=[

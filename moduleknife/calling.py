@@ -11,6 +11,7 @@ def call_file_as_main_module(filepath):
     spec = spec_from_file_location("__main__", os.path.abspath(filepath))
     module = module_from_spec(spec)
     sys.modules["__main__"].__file__ = module.__file__  # hack
+    sys.path.append(os.path.abspath(os.path.dirname(module.__file__)))
     # todo: call_with_frames_removed
     spec.loader.exec_module(module)
 
